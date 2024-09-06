@@ -1,86 +1,71 @@
-import { useState } from "react";
-import { Link, router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Image } from "react-native";
+import AppIntroSlider from "react-native-app-intro-slider";
+import { router } from "expo-router";
+import { onboardingSwiperData } from "../constants/constants";
 
-import { images } from "../constants";
-import FormField from "../components/FormField";
-import CustomButton from "../components/CustomButton";
+export default function WelcomeIntroScreen() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const sliderRef = React.useRef(null);
 
-const SignIn = () => {
-  const [isSubmitting, setSubmitting] = useState(false);
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const nextIndex =
+        currentIndex === onboardingSwiperData.length - 1 ? 0 : currentIndex + 1;
+      setCurrentIndex(nextIndex);
 
-  const submit = () => {
-    // if (form.email === "" || form.password === "") {
-    //   Alert.alert("Error", "Please fill in all fields");
-    //   return;
-    // }
+      if (sliderRef.current) {
+        sliderRef.current.goToSlide(nextIndex);
+      }
+    }, 1000);
 
-    // Navigate to /home after validation
-    router.push("/home");
-  };
+    return () => clearInterval(interval);
+  }, [currentIndex]);
+
+  const renderItem = ({ item }) => (
+    <View className="flex-1 justify-center items-center mt-20 px-4">
+      <Image source={item.image} className="mb-8 self-center" />
+      <Text className="text-xl font-bold text-center">{item.title}</Text>
+      <View className="mt-4">
+        <Text className="text-lg text-gray-600 text-center">{item.description}</Text>
+        <Text className="text-lg text-gray-600 text-center">{item.sortDescrition}</Text>
+        {item.sortDescrition2 && (
+          <Text className="text-lg text-gray-600 text-center">{item.sortDescrition2}</Text>
+        )}
+      </View>
+    </View>
+  );
 
   return (
-    <SafeAreaView className="bg-black h-full">
-      <ScrollView>
-        <View
-          className="w-full flex justify-center h-full px-4 my-6"
-          style={{
-            minHeight: Dimensions.get("window").height - 100,
-          }}
-        >
-          <Image
-            source={images.logo}
-            resizeMode="contain"
-            className="w-[115px] h-[34px]"
-          />
-
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Log in to Simple Share
-          </Text>
-
-          <FormField
-            title="Email"
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7 border-white text-white placeholder-white border-0.5"
-            keyboardType="email-address"
-          />
-
-          <FormField
-            title="Password"
-            value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7 border-white text-white placeholder-white border-0.5"
-          />
-
-          <CustomButton
-            title="Sign In"
-            handlePress={submit}
-            containerStyles="mt-7 bg-white text-black"
-            isLoading={isSubmitting}
-          />
-
-          <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
-              Don't have an account?
-            </Text>
-            <Link
-              href="/sign-up"
-              className="text-lg text-white font-psemibold text-secondary"
-            >
-              Signup
-            </Link>
-          </View>
+    <AppIntroSlider
+      ref={sliderRef}
+      renderItem={renderItem}
+      data={onboardingSwiperData}
+      onDone={() => {
+        router.push("/sign-in");
+      }}
+      onSkip={() => {
+        router.push("/sign-in");
+      }}
+      renderNextButton={() => (
+        <View className="bg-blue-600 w-11/12 h-14 self-center justify-center items-center rounded-md">
+          <Text className="text-white text-center">Next</Text>
         </View>
-      </ScrollView>
-
-    </SafeAreaView>
+      )}
+      renderDoneButton={() => (
+        <View className="bg-blue-600 w-11/12 h-14 self-center justify-center items-center rounded-md">
+          <Text className="text-white text-center">Get Started</Text>
+        </View>
+      )}
+      renderSkipButton={() => (
+        <View className="w-11/12 h-14 self-center justify-center items-center">
+          <Text className="text-black text-center">Skip</Text>
+        </View>
+      )}
+      showSkipButton={true}
+      dotStyle={{ backgroundColor: "#C6C7CC", width: 10, height: 10, borderRadius: 5 }}
+      bottomButton={true}
+      activeDotStyle={{ backgroundColor: "#2467EC", width: 10, height: 10, borderRadius: 5 }}
+    />
   );
-};
-
-export default SignIn;
+}

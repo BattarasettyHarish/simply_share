@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-
-import { icons } from "../constants";
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { icons } from '../constants';
 
 const FormField = ({
   title,
@@ -14,15 +13,15 @@ const FormField = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View className={`space-y-2 ${otherStyles}`}>
-      <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
+    <View style={[styles.container, otherStyles]}>
+      <Text style={styles.title}>{title}</Text>
 
-      <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+      <View style={styles.inputContainer}>
         <TextInput
-          className="flex-1 text-white font-psemibold text-base"
+          style={styles.input}
           value={value}
           placeholder={placeholder}
-          placeholderTextColor="#7B7B8B"
+          placeholderTextColor="#7B7B8B" // Gray color for placeholder
           onChangeText={handleChangeText}
           secureTextEntry={title === "Password" && !showPassword}
           {...props}
@@ -32,7 +31,7 @@ const FormField = ({
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
               source={!showPassword ? icons.eye : icons.eyeHide}
-              className="w-6 h-6"
+              style={styles.icon}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -41,5 +40,35 @@ const FormField = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 16, 
+  },
+  title: {
+    fontSize: 16,
+    color: '#000000', // Black color for title
+    marginBottom: 8, 
+  },
+  inputContainer: {
+    width: '100%',
+    height: 64, 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    backgroundColor: '#F5F5F5', // Light gray background for input
+    borderRadius: 16, 
+    borderColor: '#E0E0E0', // Light gray border color
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#000000', // Black color for input text
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+});
 
 export default FormField;

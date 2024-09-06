@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
 import { Link, Stack } from "expo-router";
 import { useCameraPermissions } from "expo-camera";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const Home = () => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -16,21 +17,16 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ title: "Overview", headerShown: false }} />
-      <Text style={styles.title}>QR Code Scanner</Text>
-      <View style={{ gap: 20 }}>
-        <Pressable onPress={handleRequestPermission}>
+      <View style={styles.content}>
+        <Text style={styles.title}>QR Code Scanner</Text>
+        <Pressable onPress={handleRequestPermission} style={styles.buttonContainer}>
           <Text style={styles.buttonStyle}>Request Permissions</Text>
         </Pressable>
+      </View>
+      <View style={styles.iconContainer}>
         <Link href={"/scanner"} asChild>
           <Pressable disabled={!isPermissionGranted}>
-            <Text
-              style={[
-                styles.buttonStyle,
-                { opacity: !isPermissionGranted ? 0.5 : 1 },
-              ]}
-            >
-              Scan Code
-            </Text>
+            <MaterialIcons name="qr-code-scanner" size={40} color="red" />
           </Pressable>
         </Link>
       </View>
@@ -41,19 +37,30 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "black",
-    justifyContent: "space-around",
+    backgroundColor: "#FFFFFF",
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 80,
   },
   title: {
-    color: "white",
+    color: "#000000",
     fontSize: 40,
+  },
+  buttonContainer: {
+    marginVertical: 20,
   },
   buttonStyle: {
     color: "#0E7AFE",
     fontSize: 20,
     textAlign: "center",
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 10,
   },
 });
 

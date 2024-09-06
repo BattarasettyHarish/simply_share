@@ -1,37 +1,26 @@
 import React, { useState } from 'react';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, Dimensions, Alert, Image, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Dimensions, Image, StyleSheet } from 'react-native';
 import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 
-const SignUp = () => {
+const SignIn = () => {
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    username: '',
     email: '',
     password: '',
   });
 
-  const submit = async () => {
-    if (form.username === '' || form.email === '' || form.password === '') {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
+  const submit = () => {
+    // if (form.email === "" || form.password === "") {
+    //   Alert.alert("Error", "Please fill in all fields");
+    //   return;
+    // }
 
-    setSubmitting(true);
-    try {
-      const result = await createUser(form.email, form.password, form.username);
-      setUser(result);
-      setIsLogged(true);
-
-      router.replace('/home');
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setSubmitting(false);
-    }
+    // Navigate to /home after validation
+    router.push("/instagram");
   };
 
   return (
@@ -44,13 +33,15 @@ const SignUp = () => {
             style={styles.logo}
           />
 
-          <Text style={styles.headerText}>Sign Up to Simple Share</Text>
+          <Text style={styles.headerText}>
+            Log in to Simple Share
+          </Text>
 
           <FormField
             title="Email"
             value={form.email}
             handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles={[styles.formField, styles.emailField]}
+            otherStyles={styles.formField}
             keyboardType="email-address"
           />
 
@@ -62,16 +53,18 @@ const SignUp = () => {
           />
 
           <CustomButton
-            title="Sign Up"
+            title="Sign In"
             handlePress={submit}
             containerStyles={styles.button}
             isLoading={isSubmitting}
           />
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Have an account already?</Text>
-            <Link href="/sign-in" style={styles.link}>
-              Login
+            <Text style={styles.footerText}>
+              Don't have an account?
+            </Text>
+            <Link href="/sign-up" style={styles.link}>
+              Signup
             </Link>
           </View>
         </View>
@@ -98,24 +91,24 @@ const styles = StyleSheet.create({
     minHeight: Dimensions.get('window').height - 100,
   },
   logo: {
-    width: 115,
+    width: 135,
     height: 34,
   },
   headerText: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: '600', 
     color: '#000000', // Black color for text
     marginTop: 20,
     textAlign: 'center',
   },
   button: {
     marginTop: 16,
-    backgroundColor: '#007BFF', // Blue background for button
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    width: '100%',
-    alignItems: 'center',
+    backgroundColor: '#007BFF', 
+    borderRadius: 8, 
+    paddingVertical: 12, 
+    paddingHorizontal: 24, 
+    width: '100%', 
+    alignItems: 'center', 
   },
   footer: {
     flexDirection: 'row',
@@ -123,8 +116,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   footerText: {
-    fontSize: 16,
-    color: '#000000', // Black color for footer text
+    fontSize: 18,
+    color: '#000000', // Black color for text
   },
   link: {
     fontSize: 16,
@@ -134,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default SignIn;
