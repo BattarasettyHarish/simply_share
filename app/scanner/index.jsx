@@ -9,14 +9,15 @@ import {
   StyleSheet,
 } from "react-native";
 import { Overlay } from "./Overlay";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ScannerScreen = () => {
   const qrLock = useRef(false);
   const appState = useRef(AppState.currentState);
+  const [cameraReady, setCameraReady] = useState(false);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
+    const handleAppStateChange = (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
@@ -24,12 +25,18 @@ const ScannerScreen = () => {
         qrLock.current = false;
       }
       appState.current = nextAppState;
-    });
+    };
+
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
 
     return () => {
       subscription.remove();
     };
   }, []);
+
+  const handleCameraReady = () => {
+    setCameraReady(true);
+  };
 
   return (
     <SafeAreaView style={StyleSheet.absoluteFillObject}>
@@ -43,6 +50,7 @@ const ScannerScreen = () => {
       <CameraView
         style={StyleSheet.absoluteFillObject}
         facing="back"
+        onCameraReady={handleCameraReady}
         onBarcodeScanned={({ data }) => {
           if (data && !qrLock.current) {
             qrLock.current = true;
@@ -52,10 +60,9 @@ const ScannerScreen = () => {
           }
         }}
       />
-      <Overlay />
+      {cameraReady && <Overlay />}
     </SafeAreaView>
   );
-}
-
+};
 
 export default ScannerScreen;
