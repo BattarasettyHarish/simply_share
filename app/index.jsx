@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 import { router } from "expo-router";
 import { onboardingSwiperData } from "../constants/constants";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function WelcomeIntroScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,20 +18,19 @@ export default function WelcomeIntroScreen() {
       if (sliderRef.current) {
         sliderRef.current.goToSlide(nextIndex);
       }
-    }, 1000);
-
+    }, 3000);
     return () => clearInterval(interval);
   }, [currentIndex]);
 
   const renderItem = ({ item }) => (
-    <View className="flex-1 justify-center items-center mt-20 px-4">
-      <Image source={item.image} className="mb-8 self-center" />
-      <Text className="text-xl font-bold text-center">{item.title}</Text>
-      <View className="mt-4">
-        <Text className="text-lg text-gray-600 text-center">{item.description}</Text>
-        <Text className="text-lg text-gray-600 text-center">{item.sortDescrition}</Text>
+    <View style={styles.slide}>
+      <Image source={item.image} style={styles.image} />
+      <Text style={styles.title}>{item.title}</Text>
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.description}>{item.sortDescrition}</Text>
         {item.sortDescrition2 && (
-          <Text className="text-lg text-gray-600 text-center">{item.sortDescrition2}</Text>
+          <Text style={styles.description}>{item.sortDescrition2}</Text>
         )}
       </View>
     </View>
@@ -48,24 +48,101 @@ export default function WelcomeIntroScreen() {
         router.push("/sign-in");
       }}
       renderNextButton={() => (
-        <View className="bg-blue-600 w-11/12 h-14 self-center justify-center items-center rounded-md">
-          <Text className="text-white text-center">Next</Text>
+        <View style={styles.nextButton}>
+          <Text style={styles.buttonText}>Next</Text>
         </View>
       )}
       renderDoneButton={() => (
-        <View className="bg-blue-600 w-11/12 h-14 self-center justify-center items-center rounded-md">
-          <Text className="text-white text-center">Get Started</Text>
+        <View style={styles.doneButton}>
+          <Text style={styles.buttonText}>Get Started</Text>
         </View>
       )}
       renderSkipButton={() => (
-        <View className="w-11/12 h-14 self-center justify-center items-center">
-          <Text className="text-black text-center">Skip</Text>
+        <View style={styles.skipButton}>
+          <Text style={styles.skipText}>Skip</Text>
         </View>
       )}
-      showSkipButton={true}
-      dotStyle={{ backgroundColor: "#C6C7CC", width: 10, height: 10, borderRadius: 5 }}
+      showSkipButton={false}
+      dotStyle={styles.dotStyle}
+      activeDotStyle={styles.activeDotStyle}
       bottomButton={true}
-      activeDotStyle={{ backgroundColor: "#2467EC", width: 10, height: 10, borderRadius: 5 }}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: hp("10%"),
+    paddingHorizontal: wp("5%"),
+  },
+  image: {
+    width: wp("80%"),
+    height: hp("30%"),
+    marginBottom: hp("5%"),
+    resizeMode: "contain",
+  },
+  title: {
+    fontSize: wp("6%"),
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: hp("2%"),
+  },
+  descriptionContainer: {
+    marginTop: hp("2%"),
+    paddingHorizontal: wp("5%"),
+  },
+  description: {
+    fontSize: wp("4.5%"),
+    textAlign: "center",
+    color: "#666",
+  },
+  nextButton: {
+    backgroundColor: "#2467EC",
+    width: wp("90%"),
+    height: hp("7%"),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: wp("2%"),
+  },
+  doneButton: {
+    backgroundColor: "#2467EC",
+    width: wp("90%"),
+    height: hp("7%"),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: wp("2%"),
+  },
+  buttonText: {
+    color: "white",
+    fontSize: wp("5%"),
+    textAlign: "center",
+  },
+  skipButton: {
+    width: wp("90%"),
+    height: hp("7%"),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  skipText: {
+    color: "#000",
+    fontSize: wp("4.5%"),
+    textAlign: "center",
+  },
+  dotStyle: {
+    backgroundColor: "#C6C7CC",
+    width: wp("3%"),
+    height: wp("3%"),
+    borderRadius: wp("1.5%"),
+    marginHorizontal: wp("1%"),
+  },
+  activeDotStyle: {
+    backgroundColor: "#2467EC",
+    width: wp("3%"),
+    height: wp("3%"),
+    borderRadius: wp("1.5%"),
+    marginHorizontal: wp("1%"),
+  },
+});

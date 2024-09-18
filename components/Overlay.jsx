@@ -3,7 +3,7 @@ import { Dimensions, Platform, StyleSheet } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
-const innerDimension = 300;
+const innerDimension = 300; 
 
 const outer = rrect(rect(0, 0, width, height), 0, 0);
 const inner = rrect(

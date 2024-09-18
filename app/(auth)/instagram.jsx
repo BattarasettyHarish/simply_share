@@ -14,7 +14,7 @@ const ConnectSocialMediaScreen = () => {
     // }
 
     // Navigate to the home screen after successful sign-in
-    router.replace("/home");
+    router.replace("/HomeScreen");
   };
 
   return (
